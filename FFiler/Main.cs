@@ -44,11 +44,18 @@ namespace FFiler
             }
         }
 
-
+        public Setting setting;
 
         public Main()
         {
             InitializeComponent();
+            setting = null;
+
+            // 設定ファイルの読み込み
+            if (File.Exists("setting.toml"))
+            {
+                setting = Toml.Load(File.ReadAllText("setting.toml"));
+            }
         }
 
 

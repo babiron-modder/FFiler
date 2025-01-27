@@ -7,7 +7,6 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
-using static System.Windows.Forms.LinkLabel;
 
 namespace FFiler
 {
@@ -91,15 +90,37 @@ namespace FFiler
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            //toolStrip1.Items.Clear();
-            // toolstripのロード
-
-            foreach(var drive in Directory.GetLogicalDrives())
+            // ドライブ
+            foreach (var drive in Directory.GetLogicalDrives())
             {
                 toolStrip1.Items.Add(new ToolStripSeparator());
                 addToolStripButton(drive, drive);
             }
             toolStrip1.Items.Add(new ToolStripSeparator());
+
+            // OneDrive
+            var tmp_path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "OneDrive");
+            if (Directory.Exists(tmp_path))
+            {
+                addToolStripButton("OneDrive", tmp_path);
+                toolStrip1.Items.Add(new ToolStripSeparator());
+            }
+
+            // Box
+            tmp_path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Box");
+            if (Directory.Exists(tmp_path))
+            {
+                addToolStripButton("Box", tmp_path);
+                toolStrip1.Items.Add(new ToolStripSeparator());
+            }
+
+            // DropBox
+            tmp_path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Dropbox");
+            if (Directory.Exists(tmp_path))
+            {
+                addToolStripButton("Dropbox", tmp_path);
+                toolStrip1.Items.Add(new ToolStripSeparator());
+            }
 
             // 各フォルダ
             addToolStripButton("デスクトップ", Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory));
@@ -109,6 +130,28 @@ namespace FFiler
             addToolStripButton("ミュージック", Environment.GetFolderPath(Environment.SpecialFolder.MyMusic));
             addToolStripButton("ビデオ", Environment.GetFolderPath(Environment.SpecialFolder.MyVideos));
 
+            toolStrip1.Items.Add(new ToolStripSeparator());
+            try
+            {
+                if (main_window.setting != null)
+                {
+                    Width = main_window.setting.setting.width;
+                    Height = main_window.setting.setting.height;
+                    for (int i = 0; i < main_window.setting.setting.columns_width.Count; ++i)
+                    {
+                        listView2.Columns[i].Width = main_window.setting.setting.columns_width[i];
+                    }
+
+                    for (int i = 0; i < main_window.setting.setting.bookmarks.Count; ++i)
+                    {
+                        addToolStripButton(main_window.setting.setting.bookmarks[i][0], main_window.setting.setting.bookmarks[i][1]);
+                    }
+                }
+            }
+            catch
+            {
+
+            }
         }
 
         private void addToolStripButton(string name, string path)
@@ -214,6 +257,7 @@ namespace FFiler
                 }
 
                 var files = dir.GetFiles();
+                var tmp_icon_filename = "";
                 foreach (var file in files)
                 {
                     item = new ListViewItem(file.Name, 1);
@@ -228,20 +272,28 @@ namespace FFiler
                     item.SubItems.Add(listviewsubitem);
                     item.Tag = new DataTag(false, file.FullName);
 
-                    // Check to see if the image collection contains an image
-                    // for this extension, using the extension as a key.
-                    if (!imageList1.Images.ContainsKey("F_" + file.Extension))
+                    // TODO: アイコンの作成は設定で変更できるようにする
+                    // TODO: フォルダのアイコンもね
+                    if(file.Extension.ToLower() == ".exe" || file.Extension.ToLower() == ".lnk")
+                    {
+                        tmp_icon_filename = file.Name;
+                    }
+                    else
+                    {
+                        tmp_icon_filename = "";
+                    }
+                    if (!imageList1.Images.ContainsKey("F_" + tmp_icon_filename+ file.Extension))
                     {
                         IntPtr hSuccess = SHGetFileInfo(file.FullName, 0,
                             ref shinfo, (uint)Marshal.SizeOf(shinfo), SHGFI_ICON | SHGFI_SMALLICON);
                         if (hSuccess != IntPtr.Zero)
                         {
                             iconForFile = Icon.FromHandle(shinfo.hIcon);
-                            imageList1.Images.Add("F_" + file.Extension, iconForFile.ToBitmap());
+                            imageList1.Images.Add("F_" + tmp_icon_filename + file.Extension, iconForFile.ToBitmap());
                             iconForFile.Dispose();
                         }
                     }
-                    item.ImageKey = "F_" + file.Extension;
+                    item.ImageKey = "F_" + tmp_icon_filename + file.Extension;
                     listView2.Items.Add(item);
                 }
             }
@@ -551,6 +603,32 @@ namespace FFiler
                     history_index++;
                     ExtractAssociatedIconEx(current_path);
                 }
+                else if (textBox1.Text.StartsWith("Box\\"))
+                {
+                    var tmppath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), textBox1.Text);
+                    if (Directory.Exists(tmppath))
+                    {
+                        current_path = Path.GetFullPath(tmppath);
+                        // 移動
+                        path_history.RemoveRange(history_index + 1, path_history.Count - 1 - history_index);
+                        path_history.Add(current_path);
+                        history_index++;
+                        ExtractAssociatedIconEx(current_path);
+                    }
+                }
+                else if (textBox1.Text.StartsWith("Dropbox\\"))
+                {
+                    var tmppath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), textBox1.Text);
+                    if (Directory.Exists(tmppath))
+                    {
+                        current_path = Path.GetFullPath(tmppath);
+                        // 移動
+                        path_history.RemoveRange(history_index + 1, path_history.Count - 1 - history_index);
+                        path_history.Add(current_path);
+                        history_index++;
+                        ExtractAssociatedIconEx(current_path);
+                    }
+                }
                 else
                 {
                     var app = new ProcessStartInfo();
@@ -636,6 +714,14 @@ namespace FFiler
                 }
             }
 
+            if (e.KeyCode == Keys.Delete)
+            {
+                削除するToolStripMenuItem_Click(sender,e);
+            }
+            if (e.KeyCode == Keys.Enter)
+            {
+                listView2_DoubleClick(sender,e);
+            }
 
         }
 
