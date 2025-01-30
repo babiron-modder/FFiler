@@ -7,6 +7,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Header;
 
 namespace FFiler
 {
@@ -533,11 +534,20 @@ namespace FFiler
             }
             else
             {
+                var dr = MessageBox.Show("確認せずに削除しますか？", "ファイル削除", MessageBoxButtons.YesNoCancel);
+                if (dr == DialogResult.Cancel)
+                {
+                    return;
+                }
                 // ファイルの削除
                 var app = new ProcessStartInfo();
                 app.FileName = "cmd";
                 var str = new StringBuilder();
-                str.Append("/c del /p ");
+                str.Append("/c del ");
+                if(dr == DialogResult.No)
+                {
+                    str.Append("/p ");
+                }
                 foreach(var item in listView2.SelectedItems)
                 {
                     if (File.Exists(((DataTag)((ListViewItem)item).Tag).path))
@@ -556,6 +566,10 @@ namespace FFiler
                 app.FileName = "cmd";
                 str = new StringBuilder();
                 str.Append("/c rd /s ");
+                if (dr == DialogResult.Yes)
+                {
+                    str.Append("/q ");
+                }
                 foreach (var item in listView2.SelectedItems)
                 {
                     if (Directory.Exists(((DataTag)((ListViewItem)item).Tag).path))
@@ -614,6 +628,22 @@ namespace FFiler
                         path_history.Add(current_path);
                         history_index++;
                         ExtractAssociatedIconEx(current_path);
+                    }
+                    if (File.Exists(tmppath))
+                    {
+                        var app = new ProcessStartInfo();
+                        app.FileName = textBox1.Text;
+                        app.WorkingDirectory = current_path;
+                        app.UseShellExecute = true;
+                        try
+                        {
+                            Process.Start(app);
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show("実行に失敗しました");
+                            textBox1.Text = current_path;
+                        }
                     }
                 }
                 else if (textBox1.Text.StartsWith("Dropbox\\"))
@@ -706,7 +736,7 @@ namespace FFiler
                                 {
 
                                 }
-                                }
+                            }
                             button4.PerformClick();
                         }
                         
@@ -725,5 +755,57 @@ namespace FFiler
 
         }
 
+        private void listView2_DragEnter(object sender, DragEventArgs e)
+        {
+            //ドラッグされているデータがstring型か調べ、
+            //そうであればドロップ効果をMoveにする
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+                e.Effect = DragDropEffects.Move;
+            else
+                //string型でなければ受け入れない
+                e.Effect = DragDropEffects.None;
+        }
+
+        private void listView2_DragDrop(object sender, DragEventArgs e)
+        {
+            // ドラッグアンドドロップされた場合
+            var pathes = (string[])e.Data.GetData(DataFormats.FileDrop, false);
+            foreach (var file_path in pathes)
+            {
+                var app = new ProcessStartInfo();
+                app.FileName = "cmd";
+                app.WorkingDirectory = current_path;
+                app.UseShellExecute = true;
+                app.Arguments = "/c move \"" + file_path + "\" \"" + current_path + "\"";
+                try
+                {
+                    var pr = Process.Start(app);
+                    pr.WaitForExit();
+                    button4.PerformClick();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("実行に失敗しました");
+                }
+            }
+            return;
+        }
+
+        private void listView2_ItemDrag(object sender, ItemDragEventArgs e)
+        {
+            if (listView2.SelectedItems.Count != 0)
+            {
+                // var files = new StringCollection();
+                var files = new string[listView2.SelectedItems.Count];
+                for (int i = 0; i < listView2.SelectedItems.Count; i++)
+                {
+                    files[i] = ((DataTag)listView2.SelectedItems[i].Tag).path;
+                }
+                //ドラッグアンドドロップする
+                ListView lbx = (ListView)sender;
+                DragDropEffects dde = lbx.DoDragDrop(new DataObject(DataFormats.FileDrop, files), DragDropEffects.Move);
+                ExtractAssociatedIconEx(current_path);
+            }
+        }
     }
 }

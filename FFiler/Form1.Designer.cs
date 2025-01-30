@@ -41,6 +41,7 @@
             this.新規作成ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ファイルを作成するToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.フォルダを作成するToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.削除するToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.エクスプローラーで開くToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
@@ -51,12 +52,12 @@
             this.button3 = new System.Windows.Forms.Button();
             this.button4 = new System.Windows.Forms.Button();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
-            this.削除するToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // listView2
             // 
+            this.listView2.AllowDrop = true;
             this.listView2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
@@ -77,6 +78,9 @@
             this.listView2.TabIndex = 1;
             this.listView2.UseCompatibleStateImageBehavior = false;
             this.listView2.View = System.Windows.Forms.View.Details;
+            this.listView2.ItemDrag += new System.Windows.Forms.ItemDragEventHandler(this.listView2_ItemDrag);
+            this.listView2.DragDrop += new System.Windows.Forms.DragEventHandler(this.listView2_DragDrop);
+            this.listView2.DragEnter += new System.Windows.Forms.DragEventHandler(this.listView2_DragEnter);
             this.listView2.DoubleClick += new System.EventHandler(this.listView2_DoubleClick);
             this.listView2.KeyDown += new System.Windows.Forms.KeyEventHandler(this.listView2_KeyDown);
             this.listView2.MouseDown += new System.Windows.Forms.MouseEventHandler(this.listView2_MouseDown);
@@ -112,19 +116,19 @@
             this.toolStripSeparator1,
             this.エクスプローラーで開くToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(181, 142);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(176, 120);
             // 
             // 新しいウィンドウで開くToolStripMenuItem
             // 
             this.新しいウィンドウで開くToolStripMenuItem.Name = "新しいウィンドウで開くToolStripMenuItem";
-            this.新しいウィンドウで開くToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.新しいウィンドウで開くToolStripMenuItem.Size = new System.Drawing.Size(175, 22);
             this.新しいウィンドウで開くToolStripMenuItem.Text = "新しいウィンドウで開く";
             this.新しいウィンドウで開くToolStripMenuItem.Click += new System.EventHandler(this.新しいウィンドウで開くToolStripMenuItem_Click);
             // 
             // パスをコピーToolStripMenuItem
             // 
             this.パスをコピーToolStripMenuItem.Name = "パスをコピーToolStripMenuItem";
-            this.パスをコピーToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.パスをコピーToolStripMenuItem.Size = new System.Drawing.Size(175, 22);
             this.パスをコピーToolStripMenuItem.Text = "パスをコピーする";
             this.パスをコピーToolStripMenuItem.Click += new System.EventHandler(this.パスをコピーToolStripMenuItem_Click);
             // 
@@ -134,7 +138,7 @@
             this.ファイルを作成するToolStripMenuItem1,
             this.フォルダを作成するToolStripMenuItem1});
             this.新規作成ToolStripMenuItem.Name = "新規作成ToolStripMenuItem";
-            this.新規作成ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.新規作成ToolStripMenuItem.Size = new System.Drawing.Size(175, 22);
             this.新規作成ToolStripMenuItem.Text = "新規作成";
             // 
             // ファイルを作成するToolStripMenuItem1
@@ -151,15 +155,22 @@
             this.フォルダを作成するToolStripMenuItem1.Text = "フォルダを作成する";
             this.フォルダを作成するToolStripMenuItem1.Click += new System.EventHandler(this.フォルダを作成するToolStripMenuItem1_Click);
             // 
+            // 削除するToolStripMenuItem
+            // 
+            this.削除するToolStripMenuItem.Name = "削除するToolStripMenuItem";
+            this.削除するToolStripMenuItem.Size = new System.Drawing.Size(175, 22);
+            this.削除するToolStripMenuItem.Text = "削除";
+            this.削除するToolStripMenuItem.Click += new System.EventHandler(this.削除するToolStripMenuItem_Click);
+            // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(177, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(172, 6);
             // 
             // エクスプローラーで開くToolStripMenuItem
             // 
             this.エクスプローラーで開くToolStripMenuItem.Name = "エクスプローラーで開くToolStripMenuItem";
-            this.エクスプローラーで開くToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.エクスプローラーで開くToolStripMenuItem.Size = new System.Drawing.Size(175, 22);
             this.エクスプローラーで開くToolStripMenuItem.Text = "エクスプローラーで開く";
             this.エクスプローラーで開くToolStripMenuItem.Click += new System.EventHandler(this.エクスプローラーで開くToolStripMenuItem_Click);
             // 
@@ -245,13 +256,6 @@
             this.toolStrip1.Size = new System.Drawing.Size(482, 25);
             this.toolStrip1.TabIndex = 13;
             this.toolStrip1.Text = "toolStrip1";
-            // 
-            // 削除するToolStripMenuItem
-            // 
-            this.削除するToolStripMenuItem.Name = "削除するToolStripMenuItem";
-            this.削除するToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.削除するToolStripMenuItem.Text = "削除";
-            this.削除するToolStripMenuItem.Click += new System.EventHandler(this.削除するToolStripMenuItem_Click);
             // 
             // Form1
             // 
