@@ -416,7 +416,7 @@ namespace FFiler
                     var app = new ProcessStartInfo();
                     app.FileName = tmp.path;
                     app.UseShellExecute = true;
-
+                    app.WorkingDirectory = current_path;
                     Process.Start(app);
                 }
 
@@ -805,6 +805,34 @@ namespace FFiler
                 ListView lbx = (ListView)sender;
                 DragDropEffects dde = lbx.DoDragDrop(new DataObject(DataFormats.FileDrop, files), DragDropEffects.Move);
                 ExtractAssociatedIconEx(current_path);
+            }
+        }
+
+        private void リネームToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if(listView2.SelectedItems.Count == 1)
+            {
+                var tmp = (DataTag)listView2.SelectedItems[0].Tag;
+                var rename = new Rename(tmp.path);
+                rename.ShowDialog();
+                if (rename.Result)
+                {
+                    var app = new ProcessStartInfo();
+                    app.FileName = "cmd";
+                    app.WorkingDirectory = current_path;
+                    app.UseShellExecute = true;
+                    app.Arguments = "/c move \"" + tmp.path + "\" \"" + rename.Result_Text + "\"";
+                    try
+                    {
+                        var pr = Process.Start(app);
+                        pr.WaitForExit();
+                        button4.PerformClick();
+                    }
+                    catch (Exception ex)
+                    {
+
+                    }
+                }
             }
         }
     }

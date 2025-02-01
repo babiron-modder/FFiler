@@ -52,6 +52,7 @@
             this.button3 = new System.Windows.Forms.Button();
             this.button4 = new System.Windows.Forms.Button();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
+            this.リネームToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -112,23 +113,24 @@
             this.新しいウィンドウで開くToolStripMenuItem,
             this.パスをコピーToolStripMenuItem,
             this.新規作成ToolStripMenuItem,
+            this.リネームToolStripMenuItem,
             this.削除するToolStripMenuItem,
             this.toolStripSeparator1,
             this.エクスプローラーで開くToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(176, 120);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(181, 164);
             // 
             // 新しいウィンドウで開くToolStripMenuItem
             // 
             this.新しいウィンドウで開くToolStripMenuItem.Name = "新しいウィンドウで開くToolStripMenuItem";
-            this.新しいウィンドウで開くToolStripMenuItem.Size = new System.Drawing.Size(175, 22);
+            this.新しいウィンドウで開くToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.新しいウィンドウで開くToolStripMenuItem.Text = "新しいウィンドウで開く";
             this.新しいウィンドウで開くToolStripMenuItem.Click += new System.EventHandler(this.新しいウィンドウで開くToolStripMenuItem_Click);
             // 
             // パスをコピーToolStripMenuItem
             // 
             this.パスをコピーToolStripMenuItem.Name = "パスをコピーToolStripMenuItem";
-            this.パスをコピーToolStripMenuItem.Size = new System.Drawing.Size(175, 22);
+            this.パスをコピーToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.パスをコピーToolStripMenuItem.Text = "パスをコピーする";
             this.パスをコピーToolStripMenuItem.Click += new System.EventHandler(this.パスをコピーToolStripMenuItem_Click);
             // 
@@ -138,7 +140,7 @@
             this.ファイルを作成するToolStripMenuItem1,
             this.フォルダを作成するToolStripMenuItem1});
             this.新規作成ToolStripMenuItem.Name = "新規作成ToolStripMenuItem";
-            this.新規作成ToolStripMenuItem.Size = new System.Drawing.Size(175, 22);
+            this.新規作成ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.新規作成ToolStripMenuItem.Text = "新規作成";
             // 
             // ファイルを作成するToolStripMenuItem1
@@ -158,19 +160,19 @@
             // 削除するToolStripMenuItem
             // 
             this.削除するToolStripMenuItem.Name = "削除するToolStripMenuItem";
-            this.削除するToolStripMenuItem.Size = new System.Drawing.Size(175, 22);
+            this.削除するToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.削除するToolStripMenuItem.Text = "削除";
             this.削除するToolStripMenuItem.Click += new System.EventHandler(this.削除するToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(172, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(177, 6);
             // 
             // エクスプローラーで開くToolStripMenuItem
             // 
             this.エクスプローラーで開くToolStripMenuItem.Name = "エクスプローラーで開くToolStripMenuItem";
-            this.エクスプローラーで開くToolStripMenuItem.Size = new System.Drawing.Size(175, 22);
+            this.エクスプローラーで開くToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.エクスプローラーで開くToolStripMenuItem.Text = "エクスプローラーで開く";
             this.エクスプローラーで開くToolStripMenuItem.Click += new System.EventHandler(this.エクスプローラーで開くToolStripMenuItem_Click);
             // 
@@ -257,6 +259,13 @@
             this.toolStrip1.TabIndex = 13;
             this.toolStrip1.Text = "toolStrip1";
             // 
+            // リネームToolStripMenuItem
+            // 
+            this.リネームToolStripMenuItem.Name = "リネームToolStripMenuItem";
+            this.リネームToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.リネームToolStripMenuItem.Text = "リネーム";
+            this.リネームToolStripMenuItem.Click += new System.EventHandler(this.リネームToolStripMenuItem_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -307,6 +316,7 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem エクスプローラーで開くToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 削除するToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem リネームToolStripMenuItem;
     }
 }
 

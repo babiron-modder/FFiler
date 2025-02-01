@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -51,10 +52,15 @@ namespace FFiler
             InitializeComponent();
             setting = null;
 
+
+            var strPath = Assembly.GetExecutingAssembly().Location;
+            strPath = Path.GetDirectoryName(strPath);
+            strPath = Path.Combine(strPath, "setting.toml");
+
             // 設定ファイルの読み込み
-            if (File.Exists("setting.toml"))
+            if (File.Exists(strPath))
             {
-                setting = Toml.Load(File.ReadAllText("setting.toml"));
+                setting = Toml.Load(File.ReadAllText(strPath));
             }
         }
 
